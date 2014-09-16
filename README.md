@@ -13,4 +13,4 @@ For example:
 		
 The end result is a map with clustered data from which station can also be selected.
 
-![Figure 1-1](map_image.png =650x "Clustered stations covering most of the area.")
+![Figure 1-1](map_image.png "Clustered stations covering most of the area.")
