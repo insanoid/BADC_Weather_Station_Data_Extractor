@@ -47,8 +47,11 @@ url = "http://badc.nerc.ac.uk/cgi-bin/midas_stations/search_by_county.cgi.py?cou
 
 cities = ['ABERDEENSHIRE','ANGUS','ANTRIM','ARGYLL (IN HIGHLAND REGION)','ARGYLL (IN STRATHCLYDE REGION)','ARGYLLSHIRE','ARMAGH','AVON','AYRSHIRE','BANFFSHIRE','BEDFORDSHIRE','BERKSHIRE','BERWICKSHIRE','BORDERS','BRECKNOCKSHIRE','BUCKINGHAMSHIRE','BUTESHIRE','CAERNARFONSHIRE','CAITHNESS','CAMBRIDGESHIRE','CARDIGANSHIRE','CARLOW','CARMARTHENSHIRE','CAVAN','CENTRAL','CHESHIRE','CLACKMANNANSHIRE','CLARE','CLEVELAND','CLWYD','CORK','CORNWALL','CUMBERLAND','CUMBRIA','DENBIGHSHIRE','DERBYSHIRE','DEVON','DONEGAL','DORSET','DOWN','DUBLIN','DUMFRIES & GALLOWAY','DUMFRIESSHIRE','DUNBARTONSHIRE','DURHAM','DYFED','EAST LOTHIAN','EAST SUSSEX','ESSEX','FERMANAGH','FIFE','FLINTSHIRE','FORFARSHIRE','GALWAY','GLAMORGANSHIRE','GLOUCESTERSHIRE','GRAMPIAN','GREATER LONDON','GREATER MANCHESTER','GWENT','GWYNEDD','HAMPSHIRE','HEREFORD','HEREFORD & WORCESTER','HERTFORDSHIRE','HIGHLAND','HUMBERSIDE','HUNTINGDONSHIRE','INVERNESS-SHIRE','ISLE OF ANGLESEY','ISLE OF WIGHT','KENT','KERRY','KILDARE','KILKENNY','KINCARDINESHIRE','KINROSS-SHIRE','KIRKCUDBRIGHTSHIRE','LANARKSHIRE','LANCASHIRE','LAOIS','LEICESTERSHIRE','LEITRIM','LIMERICK','LINCOLNSHIRE','LONDONDERRY','LONGFORD','LOTHIAN','LOUTH','MAYO','MEATH','MERIONETHSHIRE','MERSEYSIDE','MIDDLESEX','MID GLAMORGAN','MIDLOTHIAN','MIDLOTHIAN (IN BORDERS REGION)','MIDLOTHIAN (IN LOTHIAN REGION)','MONAGHAN','MONMOUTHSHIRE','MONTGOMERYSHIRE','MORAY','MORAY (IN GRAMPIAN REGION)','MORAY (IN HIGHLAND REGION)','NAIRNSHIRE','NORFOLK','NORTHAMPTONSHIRE','NORTHUMBERLAND','NORTH YORKSHIRE','NOTTINGHAMSHIRE','OFFALY','ORKNEY','OXFORDSHIRE','PEEBLESHIRE','PEMBROKESHIRE','PERTHSHIRE','PERTHSHIRE (IN CENTRAL REGION)','PERTHSHIRE (IN TAYSIDE REGION)','POWYS','POWYS (NORTH)','POWYS (SOUTH)','RADNORSHIRE','RENFREWSHIRE','ROSCOMMON','ROSS & CROMARTY','ROXBURGHSHIRE','RUTLAND','SELKIRKSHIRE','SHETLAND','SHROPSHIRE','SLIGO','SOMERSET','SOUTH GLAMORGAN','SOUTH YORKSHIRE','STAFFORDSHIRE','STIRLING','STIRLING (IN CENTRAL REGION)','STIRLING (IN STRATHCLYDE REGION)','STRATHCLYDE','SUFFOLK','SURREY','SUSSEX','SUTHERLAND','TAYSIDE','TIPPERARY','TYNE & WEAR','TYRONE','WARWICKSHIRE','WATERFORD','WESTERN ISLES','WEST GLAMORGAN','WEST LOTHIAN','WEST LOTHIAN (IN CENTRAL REGION)','WEST LOTHIAN (IN LOTHIAN REGION)','WESTMEATH','WEST MIDLANDS','WESTMORLAND','WEST SUFFOLK','WEST SUSSEX','WEST YORKSHIRE','WEXFORD','WICKLOW','WIGTOWNSHIRE','WILTSHIRE','WORCESTERSHIRE','YORKSHIRE']
 
+if len(sys.argv):
+	minyear = sys.argv[1]
+
 f = open('processed_data_'+minyear+'.dat','w')
-f2 = open('processed_location_detailed_'+minyear+'.dat','w')
+f2 = open('processed_location_detailed_'+minyear+'.csv','w')
 f3 = open('links_'+minyear+'.html','w')
 
 ##should be stations.
@@ -60,6 +63,8 @@ v_print = None
 
     
 def main():
+
+	global total_valid_counties
 
 	ctr = 0;
 	total = len(cities)
@@ -89,12 +94,14 @@ def main():
 	f2.close()
 	f3.write(contentHTML+"</ul></html>\n")
 	f3.close()
+	print  bcolors.OKGREEN
+	print  bcolors.OKGREEN
 	print  bcolors.OKGREEN + "------------------------------------------------"	
 	print  bcolors.OKGREEN + "Total Counties: " + str(ctr)
 	print  bcolors.OKGREEN + "Total Valid Counties: " + str(total_valid_counties)
 	print  bcolors.OKGREEN + "Total Stations: " + str(total_stations)
 	print  bcolors.OKGREEN + "Total Valid Stations: " + str(total_valid_stations)
-
+	print  bcolors.OKGREEN + "------------------------------------------------"	
 def process(html_content, city_name):
 	
 	global total_stations
@@ -130,14 +137,10 @@ def process(html_content, city_name):
 	if len(usablevar) != 0:
 		f.write(city_name + "\n"+ usablevar + "\n\n");
 		writeToHTML(usablevar, city_name)
-		print
-		print bcolors.OKGREEN + city_name
-		print bcolors.OKGREEN + usablevar
+		print bcolors.OKGREEN + str(len(usablevar)) + " Valid Stations."
 		print
 	else:
-		print
-		print bcolors.WARNING + city_name
-		print bcolors.WARNING + "No Valid Stations"
+		print bcolors.WARNING + "No Valid Stations."
 		print
 
 def writeToHTML(stations, county):
